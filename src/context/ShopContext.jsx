@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { products } from "../assets/assets";
 
-const ShopContext = createContext();
+export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
 
