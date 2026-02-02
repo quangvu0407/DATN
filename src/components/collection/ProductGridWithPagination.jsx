@@ -62,6 +62,7 @@ const ProductGridWithPagination = ({ products, productsPerPage = 8 }) => {
                 {page}
               </button>
             ))
+
           }
 
           <button
@@ -71,7 +72,7 @@ const ProductGridWithPagination = ({ products, productsPerPage = 8 }) => {
           >
             Next
           </button>
-        </div>
+        </div >
       )}
     </>
   )

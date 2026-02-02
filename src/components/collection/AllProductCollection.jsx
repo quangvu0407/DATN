@@ -9,7 +9,7 @@ import OptionSortCollection from './OptionSortCollection';
 import ProductGridWithPagination from './ProductGridWithPagination'
 
 const AllProductCollection = () => {
-  const { products } = useContext(ShopContext);
+  const { products, search, showSearch } = useContext(ShopContext);
   const [showFilter, setShowFilter] = useState(true);
   const [filterProduct, setFilterProduct] = useState([]);
 
@@ -52,6 +52,11 @@ const AllProductCollection = () => {
   }
   const applyFilter = () => {
     let productCopy = products.slice()
+
+    if (showSearch && search) {
+      productCopy = productCopy.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))
+    }
+
     if (category.length > 0) {
       productCopy = productCopy.filter(item => category.includes(item.category));
     }
@@ -69,11 +74,10 @@ const AllProductCollection = () => {
 
   useEffect(() => {
     applyFilter();
-  }, [category, subCategory])
+  }, [category, subCategory, search, showSearch])
 
   useEffect(() => {
     sortProduct();
-    console.log(sortType);
   }, [sortType])
   return (
     <>
@@ -91,7 +95,7 @@ const AllProductCollection = () => {
       {/* Right slide */}
 
       <div className='flex-1'>
-        
+
         <OptionSortCollection setSortType={setSortType} />
 
         {/* Product list */}
