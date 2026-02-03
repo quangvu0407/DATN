@@ -31,10 +31,7 @@ const ProductGridWithPagination = ({ products, productsPerPage = 8 }) => {
           currentProducts.map(item => (
             <ProductItems
               key={item._id}
-              id={item._id}
-              image={item.image}
-              name={item.name}
-              price={item.price}
+              productData={item}
             />
           ))
         }

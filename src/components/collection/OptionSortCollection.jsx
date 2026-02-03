@@ -1,5 +1,5 @@
 import React from 'react'
-import Title from '../Menu/Title'
+import Title from '../Title'
 
 const OptionSortCollection = ({ setSortType }) => {
   return (
