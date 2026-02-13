@@ -12,11 +12,11 @@ const RelatedProduct = ({ category, subCategory }) => {
       let productCopy = products.slice();
       productCopy = productCopy.filter((item) => (item.category === category || item.subCategory === subCategory))
 
-      setRelated(productCopy.slice(0, 5));
+      setRelated(productCopy.slice(0, 10));
     }
   }, [products])
-  console.log(related);
-  console.log(category, subCategory);
+  // console.log(related);
+  // console.log(category, subCategory);
 
   return (
     <div className='my-24'>

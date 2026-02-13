@@ -4,7 +4,7 @@ import { assets } from '../../assets/assets';
 import RelatedProduct from './RelatedProduct';
 
 const ProductDetail = ({ productId }) => {
-  const { products, currency } = useContext(ShopContext);
+  const { products, currency, addToCard} = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState('');
   const [size, setSize] = useState('');
@@ -71,7 +71,7 @@ const ProductDetail = ({ productId }) => {
               ))}
             </div>
           </div>
-          <button className='border border-black-200 rounded-lg bg-orange-200 text-black px-8 py-3 text-sm active:bg-blue-500'>ADD TO CART</button>
+          <button onClick={() => addToCard(productData._id, size)} className='border border-black-200 rounded-lg bg-orange-200 text-black px-8 py-3 text-sm active:bg-blue-500'>ADD TO CART</button>
           <hr className='mt-8 sm:w-4/5' />
           <div className='text-sm text-gray-500 mt-5 flex flex-col gap-1'>
             <p>100% Original Product</p>
@@ -85,9 +85,9 @@ const ProductDetail = ({ productId }) => {
       {/* Mô tả chi tiết và bình luận */}
       <div className='mt-20'>
         <div className='flex gap-2 items-center'>
-          <b className='border border-orange-600 rounded px-5 py-2 text-sm'>Description</b>
+          <button className='border border-orange-600 rounded px-5 py-2 text-sm cursor-pointer'>Description</button>
           <hr className='w-2' />
-          <b className='border border-gray-600 px-5 rounded py-2 text-sm'>Reviews (122)</b>
+          <button className='border border-gray-600 px-5 rounded py-2 text-sm cursor-pointer'>Reviews (122)</button>
         </div>
 
         <div className='flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500 mt-3 border rounded-xl'>
