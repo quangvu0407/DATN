@@ -64,13 +64,13 @@ const AllProductCollection = () => {
     if (subCategory.length > 0) {
       productCopy = productCopy.filter(item => subCategory.includes(item.subCategory));
     }
-
+    console.log(products);
     setFilterProduct(productCopy)
   }
 
   useEffect(() => {
     setFilterProduct(products);
-  }, [])
+  }, [products])
 
   useEffect(() => {
     applyFilter();

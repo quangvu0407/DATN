@@ -4,10 +4,11 @@ import { assets } from '../../assets/assets';
 import RelatedProduct from './RelatedProduct';
 
 const ProductDetail = ({ productId }) => {
-  const { products, currency, addToCard} = useContext(ShopContext);
+  const { products, currency, addToCard } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState('');
   const [size, setSize] = useState('');
+  const [activeTab, setActiveTab] = useState('description');
 
   const fetchProductData = async () => {
     products.map((item) => {
@@ -57,7 +58,7 @@ const ProductDetail = ({ productId }) => {
             <img src={assets.star_dull_icon} alt="" className="w-3 5" />
             <p className='pl-2'>(122)</p>
           </div>
-          <p className='font-medium text-3xl mt-5 text-gray-400'>Price: {currency}  {productData.price}</p>
+          <p className='font-medium text-3xl mt-5 text-gray-400 text-green-700'>Price: {currency}  {productData.price}</p>
           <p className='text-xl mt-5 text-gray-500 md:w-4/5'>
             <span className='text-gray-700'>Description: </span>
             {productData.description}
@@ -84,23 +85,59 @@ const ProductDetail = ({ productId }) => {
       </div>
       {/* Mô tả chi tiết và bình luận */}
       <div className='mt-20'>
+        {/* Tab Buttons */}
         <div className='flex gap-2 items-center'>
-          <button className='border border-orange-600 rounded px-5 py-2 text-sm cursor-pointer'>Description</button>
-          <hr className='w-2' />
-          <button className='border border-gray-600 px-5 rounded py-2 text-sm cursor-pointer'>Reviews (122)</button>
+          <button
+            onClick={() => setActiveTab('description')}
+            className={`px-6 py-3 text-sm font-medium transition-all duration-300 border rounded-t-lg cursor-pointer ${activeTab === 'description'
+              ? 'border-orange-600 bg-white text-orange-600 z-10'
+              : 'border-black text-gray-500'
+              }`}
+          >
+            Description
+          </button>
+
+          <button
+            onClick={() => setActiveTab('reviews')}
+            className={`px-6 py-3 text-sm font-medium transition-all duration-300 border rounded-t-lg -ml-px cursor-pointer ${activeTab === 'reviews'
+              ? 'border-orange-600 bg-white text-orange-600 z-10'
+              : 'border border-black text-gray-500'
+              }`}
+          >
+            Reviews (0)
+          </button>
         </div>
 
-        <div className='flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500 mt-3 border rounded-xl'>
-          <p>
-            This clothing item is made from carefully selected, high-quality fabric that feels soft on the skin while remaining breathable and comfortable throughout the day.
-            The material allows for good air circulation, helping you stay cool and relaxed even during long hours of wear.
-            Its modern cut and well-balanced proportions create a clean, stylish look that easily fits into any everyday wardrobe.
-          </p>
-          <p>
-            Designed with attention to detail, the garment features precise stitching and a durable structure that helps it maintain its shape over time.
-            The fabric resists fading and shrinking after multiple washes, ensuring long-lasting use and consistent quality.
-            Whether paired with casual jeans or styled for a more polished outfit, this piece offers versatility, comfort, and timeless appeal for daily wear.
-          </p>
+        {/* Tab Content Area */}
+        <div className='border border-gray-200 px-8 py-8 text-sm text-gray-600 rounded-b-xl rounded-tr-xl bg-white shadow-sm -mt-[1px] mt-4'>
+
+          {/* Nội dung Description */}
+          {activeTab === 'description' && (
+            <div className='flex flex-col gap-5 leading-relaxed animate-fadeIn'>
+              <p>
+                This device is equipped with a high-capacity battery that delivers stable and long-lasting performance throughout the day.
+                With fast-charging support, you can quickly recharge and get back to using your phone without long interruptions.
+                The optimized power management system helps conserve energy, ensuring efficient usage even during extended screen time.
+              </p>
+
+              <p>
+                Designed for modern lifestyles, the phone also supports high-quality audio accessories such as wireless and wired earphones.
+                It provides clear sound output, stable connectivity, and low latency for music, calls, and gaming.
+                Whether you're charging your device or enjoying your favorite audio through headphones, this product offers convenience, reliability, and smooth everyday performance.
+              </p>
+            </div>
+          )}
+
+          {/* Nội dung Reviews (Mặc định chưa có comment) */}
+          {activeTab === 'reviews' && (
+            <div className='flex flex-col items-center justify-center py-10 gap-2 animate-fadeIn'>
+              <div className='text-gray-300 text-5xl mb-2'>💬</div>
+              <p className='text-gray-400 italic text-base'>There are no reviews yet for this product.</p>
+              <button className='mt-4 text-orange-600 hover:underline font-medium'>
+                Be the first to write a review!
+              </button>
+            </div>
+          )}
         </div>
         {/* Sản phẩm tương tự */}
         <RelatedProduct category={productData.category} subCategory={productData.subCategory} />

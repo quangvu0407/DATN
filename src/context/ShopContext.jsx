@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
-import { products } from "../assets/assets";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../customize/axios";
 
 export const ShopContext = createContext();
 
@@ -11,9 +11,10 @@ const ShopContextProvider = (props) => {
   const delivery_fee = 10;
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
-  const [cartItems, setCardItems] = useState({});
+  const [cartItems, setCartItems] = useState({});
+  const [products, setProducts] = useState([]);
+  const [token, setToken] = useState('');
   const navigate = useNavigate();
-
 
   const addToCard = async (itemId, size) => {
 
@@ -36,8 +37,31 @@ const ShopContextProvider = (props) => {
       cardData[itemId][size] = 1;
     }
 
-    setCardItems(cardData);
+    setCartItems(cardData);
+
+    if (token) {
+      try {
+        await axiosInstance.post('/api/cart/add', { itemId, size })
+      }
+      catch (error) {
+        console.log(error);
+      }
+    }
   }
+
+  const getUserCart = async () => {
+    try {
+      const response = await axiosInstance.get("/api/cart/get",
+        {}
+      );
+      if (response.success) {
+        setCartItems(response.cartData);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
 
   const getCartCount = () => {
     let totalCount = 0;
@@ -48,45 +72,101 @@ const ShopContextProvider = (props) => {
             totalCount += cartItems[items][item];
           }
         } catch (error) {
-
+          console.log(error);
         }
       }
     }
     return totalCount
   }
+  console.log(cartItems);
+
+  const getProductsData = async () => {
+    try {
+      const data = await axiosInstance.get("/api/product/list");
+      // console.log(response.data);
+
+      if (data.success) {
+        setProducts(data.products);
+        console.log(data);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getProductsData();
+  }, [])
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      getUserCart();
+    }
+  }, [token]);
 
   const updateQuantity = async (itemId, size, quantity) => {
-    let cartData = structuredClone(cartItems)
+    let cartData = structuredClone(cartItems);
 
-    cartData[itemId][size] = quantity;
-    setCardItems(cartData)
+    if (quantity === 0) {
+      delete cartData[itemId][size];
+
+      // nếu product không còn size nào
+      if (Object.keys(cartData[itemId]).length === 0) {
+        delete cartData[itemId];
+      }
+    } else {
+      cartData[itemId][size] = quantity;
+    }
+
+    setCartItems(cartData);
+
+    if (token) {
+      try {
+        await axiosInstance.post(
+          "/api/cart/update",
+          { itemId, size, quantity },
+        );
+      } catch (error) {
+        console.log(error);
+        toast.error(error.message);
+      }
+    }
   }
 
   const getCartAmount = () => {
-    let totalAmount = 0;
-    for (const items in cartItems) {
-      let itemInfo = products.find((product) => product._id === items)
-      for (const item in cartItems[items]) {
-        try {
-          if (cartItems[items][item] > 0) {
-            totalAmount += itemInfo.price * cartItems[items][item]
-          }
-        }
-        catch (error) {}
-      }
-    }
+    return Object.keys(cartItems).reduce((total, productId) => {
 
-    return totalAmount
-  }
+      const product = products.find(
+        (p) => p._id.toString() === productId.toString()
+      );
 
+      if (!product) return total;
+
+      return total + Object.keys(cartItems[productId]).reduce(
+        (subTotal, size) =>
+          subTotal + product.price * cartItems[productId][size],
+        0
+      );
+
+    }, 0);
+  };
 
   const value = {
     products, currency, delivery_fee,
     search, setSearch, showSearch, setShowSearch,
     cartItems, addToCard, getCartCount, updateQuantity,
-    getCartAmount, navigate
+    getCartAmount, navigate, setToken, token, getUserCart, setCartItems
   }
-
 
 
   return (
