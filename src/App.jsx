@@ -14,6 +14,7 @@ import Hero from './components/Menu/Hero'
 import Footer from './components/Contact/Footer'
 import SearchBar from './components/Menu/SearchBar'
 import Verify from './pages/verify'
+import Profile from './pages/Profile'
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
         <Route path='/place-order' element={<PlaceOrder />} />
         <Route path='/orders' element={<Orders />} />
         <Route path='/verify' element={<Verify />} />
+        <Route path='/profile' element={<Profile />} />
       </Routes>
       <Footer />
     </div>
