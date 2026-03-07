@@ -15,6 +15,7 @@ import Footer from './components/Contact/Footer'
 import SearchBar from './components/Menu/SearchBar'
 import Verify from './pages/verify'
 import Profile from './pages/Profile'
+import EcommerceChatbot from './pages/ChatBot'
 
 const App = () => {
   return (
@@ -33,6 +34,7 @@ const App = () => {
         <Route path='/orders' element={<Orders />} />
         <Route path='/verify' element={<Verify />} />
         <Route path='/profile' element={<Profile />} />
+        <Route path='/chatBot' element={<EcommerceChatbot />}/>
       </Routes>
       <Footer />
     </div>
